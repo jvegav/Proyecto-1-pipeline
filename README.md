@@ -46,3 +46,64 @@ Este segundo endpoint permite reentrenar el modelo con nuevas instancias de dato
     ```
 
 
+
+# Instrucciones para Ejecutar la Aplicación
+
+Sigue estos pasos para ejecutar la aplicación de predicción y reentrenamiento del modelo de Machine Learning.
+
+## 1. Crear un Entorno Virtual en Python
+
+Es recomendable crear un entorno virtual para aislar las dependencias del proyecto. Para crear un entorno virtual en Python, ejecuta el siguiente comando en tu terminal:
+
+```bash
+python -m venv biML
+ ```
+
+Esto creará un entorno virtual llamado biML.
+
+## 2. Activar el Entorno Virtual
+Dependiendo de tu sistema operativo, activa el entorno virtual:
+ - En Windows
+ ```
+.\biML\Scripts\activate
+ ```
+- En MacOs o Linux
+ ```
+source biML/bin/activate
+ ```
+
+## 3. Instalar las Dependencias
+
+Con el entorno virtual activado, instala las dependencias necesarias ejecutando el siguiente comando:
+
+instala manualmente las siguientes librerías con:
+
+ ```bash
+pip install fastapi uvicorn pandas scikit-learn nltk contractions openpyxl
+ ```
+
+Dependiendo de tu configuración, aquí está una lista de las principales dependencias que se instalarán:
+
+    fastapi (0.115.0)
+    uvicorn (0.31.0)
+    pandas (2.2.3)
+    scikit-learn (1.5.2)
+    nltk (3.9.1)
+    contractions (0.1.73)
+    openpyxl (3.1.5)
+
+## 4. Inicializa la Aplicacion
+
+Para ejecutar la aplicación, utiliza uvicorn. Ejecuta el siguiente comando:
+
+ ```bash
+uvicorn mlAPI:app --reload
+ ```
+
+Esto iniciará el servidor en modo recarga automática, lo que significa que se actualizará automáticamente cuando realices cambios en el código.
+
+La aplicación estará disponible en:
+
+ ```bash
+http://127.0.0.1:8000
+ ```
