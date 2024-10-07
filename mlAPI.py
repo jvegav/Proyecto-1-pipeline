@@ -9,12 +9,17 @@ from textProccessing import ApplyTextProcessing
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
 from typing import List
+from joblib import dump, load
 
 app = FastAPI()
 
 
 class PredictingItem(BaseModel):
     Textos_espanol: List[str]
+
+class TrainingItem(BaseModel):
+    Textos_espanol: List[str]
+    sdg : List[int]
 
 
 pipeline = Pipeline(steps=[
@@ -40,14 +45,27 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_
 
 pipeline.fit(X_train, Y_train)
 
+dump(pipeline, 'pipeline_model.joblib')
 
-@app.post('/')
-async def scoring_endpoint(item: PredictingItem):
-    
+
+@app.post('/predict')
+async def ods_scoring_endpoint(item: PredictingItem):
+    pipeline_ods = load('pipeline_model.joblib')
     df = pd.DataFrame(item.Textos_espanol, columns=['Textos_espanol'])
-    
-    
-    yhat = pipeline.predict(df)
-    
-   
+    yhat = pipeline_ods.predict(df)
     return {"prediction": yhat.tolist()}
+
+
+@app.post('/train')
+async def train_model_endpoint(item: TrainingItem):
+    df = pd.DataFrame({
+        'Textos_espanol': item.Textos_espanol,
+        'sdg': item.sdg
+    })
+    X = df[['Textos_espanol']]
+    Y = df['sdg']
+
+    pipeline_ods = load('pipeline_model.joblib')
+    pipeline_ods.fit(X, Y)
+    dump(pipeline_ods, 'pipeline_model.joblib')
+    return {"message": "Modelo reentrenado exitosamente"}
