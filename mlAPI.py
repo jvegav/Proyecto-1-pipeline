@@ -86,6 +86,3 @@ async def train_model_endpoint(item: TrainingItem):
         "f1_score": f1
     }
 
-    dump(pipeline_ods, 'pipeline_model.joblib')
-
-    return {"message": "Modelo reentrenado exitosamente"}
