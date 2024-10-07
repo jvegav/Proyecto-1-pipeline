@@ -12,11 +12,11 @@ from typing import List
 
 app = FastAPI()
 
-# Clase para recibir una lista de textos
+
 class PredictingItem(BaseModel):
     Textos_espanol: List[str]
 
-# Definición del pipeline con los pasos adecuados
+
 pipeline = Pipeline(steps=[
     ('change_characters', ChangeCharacters(columns=['Textos_espanol'])),
     ('transformations', ColumnTransformer(
@@ -29,7 +29,7 @@ pipeline = Pipeline(steps=[
     ('classifier', KNeighborsClassifier(n_neighbors=100))
 ])
 
-# Cargar datos y ajustar el pipeline
+
 data = pd.read_excel('./ODScat_345.xlsx')
 data.to_csv('./ODScat_345.csv', index=False)
 data = pd.read_csv('./ODScat_345.csv', encoding='utf-8')
@@ -40,14 +40,14 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_
 
 pipeline.fit(X_train, Y_train)
 
-# Endpoint para recibir múltiples textos
+
 @app.post('/')
 async def scoring_endpoint(item: PredictingItem):
-    # Crear un DataFrame con todos los textos de la lista
+    
     df = pd.DataFrame(item.Textos_espanol, columns=['Textos_espanol'])
     
-    # Predecir los resultados usando el pipeline
+    
     yhat = pipeline.predict(df)
     
-    # Devolver las predicciones como lista
+   
     return {"prediction": yhat.tolist()}
