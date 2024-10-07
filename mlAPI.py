@@ -7,7 +7,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from changeCharacters import ChangeCharacters
 from textProccessing import ApplyTextProcessing
 import pandas as pd
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, recall_score, f1_score
 from typing import List
 from joblib import dump, load
 
@@ -65,7 +66,26 @@ async def train_model_endpoint(item: TrainingItem):
     X = df[['Textos_espanol']]
     Y = df['sdg']
 
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
+
     pipeline_ods = load('pipeline_model.joblib')
-    pipeline_ods.fit(X, Y)
+    pipeline_ods.fit(X_train, Y_train)
+    
+    y_pred = pipeline_ods.predict(X_test)
+    accuracy = accuracy_score(Y_test, y_pred)
+    recall = recall_score(Y_test, y_pred, average='weighted')
+    f1 = f1_score(Y_test, y_pred, average='weighted')
+
     dump(pipeline_ods, 'pipeline_model.joblib')
+
+    
+    return {
+        "message": "Modelo reentrenado exitosamente",
+        "accuracy": accuracy,
+        "recall": recall,
+        "f1_score": f1
+    }
+
+    dump(pipeline_ods, 'pipeline_model.joblib')
+
     return {"message": "Modelo reentrenado exitosamente"}
