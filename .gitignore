@@ -1,0 +1,47 @@
+# Ignorar el entorno virtual llamado biML
+biML/
+biML/*
+
+# Ignorar entornos virtuales comunes
+env/
+venv/
+.venv/
+
+# Ignorar archivos de caché y compilación
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ignorar archivos de configuración del entorno
+.env
+.env.*
+
+# Ignorar archivos de base de datos o configuraciones locales
+*.sqlite3
+*.db
+*.log
+
+# Ignorar archivos de dependencias
+*.egg-info/
+*.egg
+*.bak
+*.swp
+
+# Ignorar archivos de Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Ignorar archivos de compilación de PyInstaller
+# Cualquier archivo binario creado por PyInstaller
+dist/
+build/
+*.spec
+
+# Ignorar archivos de configuración del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de proyectos de IDEs
+.vscode/
+.idea/
+*.iml
