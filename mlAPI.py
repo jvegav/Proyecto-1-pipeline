@@ -54,7 +54,11 @@ async def ods_scoring_endpoint(item: PredictingItem):
     pipeline_ods = load('pipeline_model.joblib')
     df = pd.DataFrame(item.Textos_espanol, columns=['Textos_espanol'])
     yhat = pipeline_ods.predict(df)
-    return {"prediction": yhat.tolist()}
+    yhat_proba = pipeline_ods.predict_proba(df)
+    return {
+        "prediction": yhat.tolist(),
+        "probability": yhat_proba.tolist()
+    }
 
 
 @app.post('/train')
