@@ -63,30 +63,38 @@ async def ods_scoring_endpoint(item: PredictingItem):
 
 @app.post('/train')
 async def train_model_endpoint(item: TrainingItem):
-    df = pd.DataFrame({
+    data_original = pd.read_csv('./ODScat_345.csv', encoding='utf-8')
+
+    df_nuevos = pd.DataFrame({
         'Textos_espanol': item.Textos_espanol,
         'sdg': item.sdg
     })
-    X = df[['Textos_espanol']]
-    Y = df['sdg']
 
-    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
+    data_combinada = pd.concat([data_original, df_nuevos], ignore_index=True)
+    data_combinada.to_csv('./ODScat_345.csv', index=False, encoding='utf-8')    
+    X = data_combinada[['Textos_espanol']]
+    Y = data_combinada['sdg']
+    
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
 
+    
     pipeline_ods = load('pipeline_model.joblib')
     pipeline_ods.fit(X_train, Y_train)
+
     
     y_pred = pipeline_ods.predict(X_test)
     accuracy = accuracy_score(Y_test, y_pred)
     recall = recall_score(Y_test, y_pred, average='weighted')
     f1 = f1_score(Y_test, y_pred, average='weighted')
 
+    
     dump(pipeline_ods, 'pipeline_model.joblib')
 
-    
     return {
         "message": "Modelo reentrenado exitosamente",
         "accuracy": accuracy,
         "recall": recall,
         "f1_score": f1
     }
+
 
