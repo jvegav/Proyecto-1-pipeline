@@ -1,4 +1,4 @@
-# Project 1 – Part 2: Prediction and Model Retraining Machine Learning Application
+# Project Data Analysis: Prediction and Model Retraining Machine Learning Application
 
 ## Context of the project
 
